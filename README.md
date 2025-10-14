@@ -18,7 +18,7 @@ For more information about our approach, please visit our [project webpage](http
 
 ### Robotic Pick-and-Place of Novel Objects in Clutter with Multi-Affordance Grasping and Cross-Domain Image Matching ( [pdf](https://arxiv.org/pdf/1710.01330.pdf) | [arxiv](https://arxiv.org/abs/1710.01330) | [webpage](http://arc.cs.princeton.edu/) )
 
-*[Andy Zeng](http://andyzeng.com), [Shuran Song](http://vision.princeton.edu/people/shurans/), [Kuan-Ting Yu](http://people.csail.mit.edu/peterkty/), [Elliott Donlon](https://www.linkedin.com/in/elliott-donlon-238601a3), [Francois R. Hogan](https://www.linkedin.com/in/francois-hogan-2b4025b6/), [Maria Bauza](http://web.mit.edu/bauza/www/), Daolin Ma, Orion Taylor, [Melody Liu](https://melodygl.wordpress.com/), Eudald Romo, [Nima Fazeli](http://nfazeli.mit.edu/), [Ferran Alet](http://web.mit.edu/alet/www/), [Nikhil Chavan Dafle](https://nikhilcd.mit.edu/), [Rachel Holladay](http://people.csail.mit.edu/rholladay/), Isabella Morona, [Prem Qu Nair](http://premqunair.com/), Druck Green, Ian Taylor, Weber Liu, [Thomas Funkhouser](http://www.cs.princeton.edu/~funk/), [Alberto Rodriguez](http://meche.mit.edu/people/faculty/ALBERTOR@MIT.EDU)*
+*[Andy Zeng](http://andyzeng.com), [Shuran Song](http://3dvision.princeton.edu/people/shurans/), [Kuan-Ting Yu](http://people.csail.mit.edu/peterkty/), [Elliott Donlon](https://www.linkedin.com/in/elliott-donlon-238601a3), [Francois R. Hogan](https://www.linkedin.com/in/francois-hogan-2b4025b6/), [Maria Bauza](http://web.mit.edu/bauza/www/), Daolin Ma, Orion Taylor, [Melody Liu](https://melodygl.wordpress.com/), Eudald Romo, [Nima Fazeli](http://nfazeli.mit.edu/), [Ferran Alet](http://web.mit.edu/alet/www/), [Nikhil Chavan Dafle](https://nikhilcd.mit.edu/), [Rachel Holladay](http://people.csail.mit.edu/rholladay/), Isabella Morona, [Prem Qu Nair](http://premqunair.com/), Druck Green, Ian Taylor, Weber Liu, [Thomas Funkhouser](http://www.cs.princeton.edu/~funk/), [Alberto Rodriguez](http://meche.mit.edu/people/faculty/ALBERTOR@MIT.EDU)*
 
 IEEE International Conference on Robotics and Automation (ICRA) 2018
 
@@ -41,7 +41,7 @@ If you find this code useful in your work, please consider citing:
 This code is released under the Apache License v2.0 (refer to the [LICENSE](LICENSE) file for details).
 
 #### Datasets
-Information and download links for our grasping dataset and image matching dataset can be found on our [project webpage](http://vision.princeton.edu/projects/2017/arc/#datasets).
+Information and download links for our grasping dataset and image matching dataset can be found on our [project webpage](http://3dvision.princeton.edu/projects/2017/arc/#datasets).
 
 #### Contact
 If you have any questions or find any bugs, please let me know: [Andy Zeng](http://www.cs.princeton.edu/~andyz/) andyz[at]princeton[dot]edu
@@ -77,10 +77,10 @@ To run our pre-trained model to get pixel-level affordances for grasping with su
 2. Download our pre-trained model for suction-based grasping:
 
     ```bash
-    wget http://vision.princeton.edu/projects/2017/arc/downloads/suction-based-grasping-snapshot-10001.t7
+    wget http://3dvision.princeton.edu/projects/2017/arc/downloads/suction-based-grasping-snapshot-10001.t7
     ```
 
-    Direct download link: [suction-based-grasping-snapshot-10001.t7 (450.1 MB)](http://vision.princeton.edu/projects/2017/arc/downloads/suction-based-grasping-snapshot-10001.t7)
+    Direct download link: [suction-based-grasping-snapshot-10001.t7 (450.1 MB)](http://3dvision.princeton.edu/projects/2017/arc/downloads/suction-based-grasping-snapshot-10001.t7)
 
 3. Run our model on an optional target RGB-D image. Input color images should be 24-bit RGB PNG, while depth images should be 16-bit PNG, where depth values are saved in deci-millimeters (10<sup>-4</sup>m).
 
@@ -110,23 +110,23 @@ To train your own model:
     cd arc-robot-vision/suction-based-grasping
     ```
 
-2. Download our suction-based grasping dataset and save the files into `arc-robot-vision/suction-based-grasping/data`. More information about the dataset can be found [here](http://vision.princeton.edu/projects/2017/arc/#datasets).
+2. Download our suction-based grasping dataset and save the files into `arc-robot-vision/suction-based-grasping/data`. More information about the dataset can be found [here](http://3dvision.princeton.edu/projects/2017/arc/#datasets).
 
     ```bash
-    wget http://vision.princeton.edu/projects/2017/arc/downloads/suction-based-grasping-dataset.zip
+    wget http://3dvision.princeton.edu/projects/2017/arc/downloads/suction-based-grasping-dataset.zip
     unzip suction-based-grasping-dataset.zip # unzip dataset
     ```
 
-    Direct download link: [suction-based-grasping-dataset.zip (1.6 GB)](http://vision.princeton.edu/projects/2017/arc/downloads/suction-based-grasping-dataset.zip)
+    Direct download link: [suction-based-grasping-dataset.zip (1.6 GB)](http://3dvision.princeton.edu/projects/2017/arc/downloads/suction-based-grasping-dataset.zip)
 
 3. Download the Torch ResNet-101 model pre-trained on ImageNet:
 
     ```bash
     cd convnet
-    wget http://vision.princeton.edu/projects/2017/arc/downloads/resnet-101.t7
+    wget http://3dvision.princeton.edu/projects/2017/arc/downloads/resnet-101.t7
     ```
 
-    Direct download link: [resnet-101.t7 (409.4 MB)](http://vision.princeton.edu/projects/2017/arc/downloads/resnet-101.t7)
+    Direct download link: [resnet-101.t7 (409.4 MB)](http://3dvision.princeton.edu/projects/2017/arc/downloads/resnet-101.t7)
 
 4. Run training (set optional parameters through command line arguments):
 
@@ -134,7 +134,7 @@ To train your own model:
     th train.lua
      ```
 
-    Tip: if you run out of GPU memory (CUDA error=2), reduce batch size or modify the network architecture in `model.lua` to use the smaller [ResNet-50 (256.7 MB)](http://vision.princeton.edu/projects/2017/arc/downloads/resnet-50.t7) model pre-trained on ImageNet.
+    Tip: if you run out of GPU memory (CUDA error=2), reduce batch size or modify the network architecture in `model.lua` to use the smaller [ResNet-50 (256.7 MB)](http://3dvision.princeton.edu/projects/2017/arc/downloads/resnet-50.t7) model pre-trained on ImageNet.
 
 ## Evaluation
 
@@ -203,10 +203,10 @@ To run our pre-trained model to get pixel-level affordances for parallel-jaw gra
 2. Download our pre-trained model for parallel-jaw grasping:
 
     ```bash
-    wget http://vision.princeton.edu/projects/2017/arc/downloads/parallel-jaw-grasping-snapshot-20001.t7
+    wget http://3dvision.princeton.edu/projects/2017/arc/downloads/parallel-jaw-grasping-snapshot-20001.t7
     ```
 
-    Direct download link: [parallel-jaw-grasping-snapshot-20001.t7 (450.1 MB)](http://vision.princeton.edu/projects/2017/arc/downloads/parallel-jaw-grasping-snapshot-20001.t7)
+    Direct download link: [parallel-jaw-grasping-snapshot-20001.t7 (450.1 MB)](http://3dvision.princeton.edu/projects/2017/arc/downloads/parallel-jaw-grasping-snapshot-20001.t7)
 
 3. To generate a RGB-D heightmap given two RGB-D images, run the following in Matlab:
 
@@ -242,14 +242,14 @@ To train your own model:
     cd arc-robot-vision/parallel-jaw-grasping
     ```
 
-2. Download our parallel-jaw grasping dataset and save the files into `arc-robot-vision/parallel-jaw-grasping/data`. More information about the dataset can be found [here](http://vision.princeton.edu/projects/2017/arc/#datasets).
+2. Download our parallel-jaw grasping dataset and save the files into `arc-robot-vision/parallel-jaw-grasping/data`. More information about the dataset can be found [here](http://3dvision.princeton.edu/projects/2017/arc/#datasets).
 
     ```bash
-    wget http://vision.princeton.edu/projects/2017/arc/downloads/parallel-jaw-grasping-dataset.zip
+    wget http://3dvision.princeton.edu/projects/2017/arc/downloads/parallel-jaw-grasping-dataset.zip
     unzip parallel-jaw-grasping-dataset.zip # unzip dataset
     ```
 
-    Direct download link: [parallel-jaw-grasping-dataset.zip (711.8 MB)](http://vision.princeton.edu/projects/2017/arc/downloads/parallel-jaw-grasping-dataset.zip)
+    Direct download link: [parallel-jaw-grasping-dataset.zip (711.8 MB)](http://3dvision.princeton.edu/projects/2017/arc/downloads/parallel-jaw-grasping-dataset.zip)
 
 3. Pre-process input data and labels for parallel-jaw grasping dataset and save the files into `arc-robot-vision/parallel-jaw-grasping/convnet/training`. Pre-processing includes rotating heightmaps into 16 discrete rotations, converting raw grasp labels (two-point lines) into dense pixel-wise labels, and augmenting labels with small amounts of jittering. Either run the following in Matlab:
 
@@ -262,19 +262,19 @@ To train your own model:
 
     ```bash
     cd convnet;
-    wget http://vision.princeton.edu/projects/2017/arc/downloads/training-parallel-jaw-grasping-dataset.zip
+    wget http://3dvision.princeton.edu/projects/2017/arc/downloads/training-parallel-jaw-grasping-dataset.zip
     unzip training-parallel-jaw-grasping-dataset.zip # unzip dataset
     ```
 
-    Direct download link: [training-parallel-jaw-grasping-dataset.zip (740.0 MB)](http://vision.princeton.edu/projects/2017/arc/downloads/training-parallel-jaw-grasping-dataset.zip)
+    Direct download link: [training-parallel-jaw-grasping-dataset.zip (740.0 MB)](http://3dvision.princeton.edu/projects/2017/arc/downloads/training-parallel-jaw-grasping-dataset.zip)
 
 4. Download the Torch ResNet-101 model pre-trained on ImageNet:
 
     ```bash
-    wget http://vision.princeton.edu/projects/2017/arc/downloads/resnet-101.t7
+    wget http://3dvision.princeton.edu/projects/2017/arc/downloads/resnet-101.t7
     ```
 
-    Direct download link: [resnet-101.t7 (409.4 MB)](http://vision.princeton.edu/projects/2017/arc/downloads/resnet-101.t7)
+    Direct download link: [resnet-101.t7 (409.4 MB)](http://3dvision.princeton.edu/projects/2017/arc/downloads/resnet-101.t7)
 
 5. Run training (set optional parameters through command line arguments):
 
@@ -282,7 +282,7 @@ To train your own model:
     th train.lua
      ```
 
-    Tip: if you run out of GPU memory (CUDA error=2), reduce batch size or modify the network architecture in `model.lua` to use the smaller [ResNet-50 (256.7 MB)](http://vision.princeton.edu/projects/2017/arc/downloads/resnet-50.t7) model pre-trained on ImageNet.
+    Tip: if you run out of GPU memory (CUDA error=2), reduce batch size or modify the network architecture in `model.lua` to use the smaller [ResNet-50 (256.7 MB)](http://3dvision.princeton.edu/projects/2017/arc/downloads/resnet-50.t7) model pre-trained on ImageNet.
 
 ## Evaluation
 
@@ -339,22 +339,22 @@ To train a model:
     cd arc-robot-vision/image-matching
     ```
 
-2. Download our image matching dataset and save the files into `arc-robot-vision/image-matching/data`. More information about the dataset can be found [here](http://vision.princeton.edu/projects/2017/arc/#datasets).
+2. Download our image matching dataset and save the files into `arc-robot-vision/image-matching/data`. More information about the dataset can be found [here](http://3dvision.princeton.edu/projects/2017/arc/#datasets).
 
     ```bash
-    wget http://vision.princeton.edu/projects/2017/arc/downloads/image-matching-dataset.zip
+    wget http://3dvision.princeton.edu/projects/2017/arc/downloads/image-matching-dataset.zip
     unzip image-matching-dataset.zip # unzip dataset
     ```
 
-    Direct download link: [image-matching-dataset.zip (4.6 GB)](http://vision.princeton.edu/projects/2017/arc/downloads/image-matching-dataset.zip)
+    Direct download link: [image-matching-dataset.zip (4.6 GB)](http://3dvision.princeton.edu/projects/2017/arc/downloads/image-matching-dataset.zip)
 
 3. Download the Torch ResNet-50 model pre-trained on ImageNet:
 
     ```bash
-    wget http://vision.princeton.edu/projects/2017/arc/downloads/resnet-50.t7
+    wget http://3dvision.princeton.edu/projects/2017/arc/downloads/resnet-50.t7
     ```
 
-    Direct download link: [resnet-50.t7 (256.7 MB)](http://vision.princeton.edu/projects/2017/arc/downloads/resnet-50.t7)
+    Direct download link: [resnet-50.t7 (256.7 MB)](http://3dvision.princeton.edu/projects/2017/arc/downloads/resnet-50.t7)
 
 4. Run training (change variable `trainMode` in `train.lua` depending on which architecture you want to train):
 
@@ -375,13 +375,13 @@ To evaluate a trained model:
 2. Download our pre-trained models (K-net and N-net) for two-stage cross-domain image matching:
 
     ```bash
-    wget http://vision.princeton.edu/projects/2017/arc/downloads/k-net.zip
+    wget http://3dvision.princeton.edu/projects/2017/arc/downloads/k-net.zip
     unzip k-net.zip 
-    wget http://vision.princeton.edu/projects/2017/arc/downloads/n-net.zip
+    wget http://3dvision.princeton.edu/projects/2017/arc/downloads/n-net.zip
     unzip n-net.zip 
     ```
 
-    Direct download links: [k-net.zip  (175.3 MB)](http://vision.princeton.edu/projects/2017/arc/downloads/k-net.zip) and [n-net.zip (174.0 MB)](http://vision.princeton.edu/projects/2017/arc/downloads/n-net.zip)
+    Direct download links: [k-net.zip  (175.3 MB)](http://3dvision.princeton.edu/projects/2017/arc/downloads/k-net.zip) and [n-net.zip (174.0 MB)](http://3dvision.princeton.edu/projects/2017/arc/downloads/n-net.zip)
 
 3. Run our pre-trained models to compute features for the testing split of our image matching dataset (change variable `trainMode` depending on which architecture you want to test):
 
