@@ -17,5 +17,6 @@
 
 ## Run
 
-1. Prepare a python environment, install requirements from requirements.txt
+1. Prepare a python environment, install PyTorch+CUDA compatible with your GPU:
+`pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu126`, install other requirements from requirements.txt
 2. Download [the dataset for training](http://3dvision.princeton.edu/projects/2017/arc/downloads/suction-based-grasping-dataset.zip) and extract it into `suction-based-grasping-py/`

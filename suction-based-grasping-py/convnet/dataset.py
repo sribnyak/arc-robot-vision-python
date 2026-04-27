@@ -67,7 +67,7 @@ class SuctionGraspingDataset(Dataset):
         label_path = os.path.join(self.data_path, "label", f"{sample_name}.png")
         label_pil = Image.open(label_path)                        # grayscale
         label_tensor = F.to_tensor(label_pil)                     # 1xHxW, [0,1]
-        label_tensor = torch.round(label_tensor * 2) + 1          # map to {1,2,3}
+        label_tensor = torch.round(label_tensor * 2).long()       # map to {0,1,2}
         # Downsample with nearest neighbour ('simple' in Lua)
         label_resized = F.resize(
             label_tensor,

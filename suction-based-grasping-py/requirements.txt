@@ -4,5 +4,8 @@ pillow
 scipy
 torch
 torchvision
+torchinfo
 tqdm
 ipykernel
+jupyter
+notebook
