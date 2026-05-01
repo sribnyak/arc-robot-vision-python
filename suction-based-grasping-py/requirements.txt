@@ -1,7 +1,10 @@
+hydra-core
 numpy
 matplotlib
+omegaconf
 pillow
 scipy
+tensorboard
 torch
 torchvision
 torchinfo

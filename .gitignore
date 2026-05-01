@@ -2,7 +2,13 @@
 .ipynb_checkpoints/
 __pycache__/
 
+.vscode/
+
 data/
 *.zip
+results.png
+outputs/
+logs/
+snapshots/
 
 archive/

@@ -1,0 +1,26 @@
+# Data
+data_path: ../data
+train_split: ../data/train-split.txt
+
+# Model
+num_classes: 1
+img_height: 480
+img_width: 640
+output_scale: 8
+
+# Training
+batch_size: 2
+shuffle_data: true
+learning_rate: 0.001
+momentum: 0.99
+max_iterations: 1000000
+seed: 42
+device: cuda
+num_workers: 4
+pin_memory: True
+
+# Checkpoints and logging
+snapshots_folder: snapshots
+log_dir: logs
+log_interval: 100
+snapshot_interval: 1000
