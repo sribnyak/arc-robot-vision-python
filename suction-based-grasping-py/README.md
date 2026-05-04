@@ -6,19 +6,14 @@ Implemented:
 - `experiments.ipynb` - a notebook for interactive code testing and playing
 - `dataset.py` - the dataset class, corresponds to original `DataLoader.lua`
 - `model.py` - model architecture
+- `metrics.py` - metrics and losses
 - `infer.py` - model inference
 - `train.py` - model training
 
 To be implemented:
-- `test.py` - model testing
 - `postprocess.py` - post-process affordance maps with background subtraction and removing regions with high variance in 3D surface normals
 - `evaluate.py` - evaluating suction-based grasping affordance predictions
 - `visualize.py` - post-processing and visualizing suction-based grasping affordance predictions
-
-To be implemented if needed:
-- `model_utils.py` - utility functions for models
-- `spatial_symmetric_padding.py` - SpatialSymmetricPadding module
-- `util.py` - utility functions
 
 ## Setup
 

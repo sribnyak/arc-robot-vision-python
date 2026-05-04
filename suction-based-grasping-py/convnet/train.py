@@ -8,7 +8,8 @@ import hydra
 from omegaconf import DictConfig
 
 from dataset import SuctionGraspingDataset, data_transform
-from model import RGBDResNet101, masked_bce_loss
+from model import RGBDResNet101
+from metrics import masked_bce_loss
 
 
 @hydra.main(version_base=None, config_path='conf', config_name='config')

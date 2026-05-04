@@ -14,7 +14,7 @@ parser.add_argument('--rgb', type=str, default='demo/test-image.color.png', help
 parser.add_argument('--depth', type=str, default='demo/test-image.depth.png', help='Path to depth image')
 parser.add_argument('--weights', type=str, default='weights/default_weights.pth', help='Path to model weights')
 parser.add_argument('--output', type=str, default='results.png', help='Path to output png file')
-parser.add_argument('--device', type=str, default='cuda', choices=['cuda', 'cpu'])
+parser.add_argument('--device', type=str, default='cuda', choices=['cpu', 'cuda', 'cuda:0', 'cuda:1'])
 args = parser.parse_args()
 
 device = args.device if torch.cuda.is_available() else 'cpu'
