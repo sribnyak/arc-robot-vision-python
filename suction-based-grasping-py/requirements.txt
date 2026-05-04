@@ -2,6 +2,7 @@ hydra-core
 numpy
 matplotlib
 omegaconf
+pandas
 pillow
 scipy
 tensorboard
