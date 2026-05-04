@@ -25,8 +25,10 @@ print(f"Loading model: {args.weights}")
 try:
     model = RGBDResNet101(num_classes=1, pretrained=False)
     checkpoint = torch.load(args.weights, map_location=device, weights_only=True)
+    if 'optimizer' in checkpoint and 'model' in checkpoint:
+        checkpoint = checkpoint['model']
     model.load_state_dict(checkpoint)
-except Exception:
+except Exception:  # TODO
     print("Couldn't load weights. Using weights from pretraining on ImageNet")
     model = RGBDResNet101(num_classes=1, pretrained=True)
 model = model.to(device).eval()
@@ -44,7 +46,7 @@ print("Computing forward pass...")
 with torch.no_grad():
     color = color[None].to(device)
     depth = depth[None].to(device)
-    output = F.sigmoid(model(color, depth.to(device)))
+    output = F.sigmoid(model(color, depth))
 
 print(f"Output shape: {output.shape}")
 
