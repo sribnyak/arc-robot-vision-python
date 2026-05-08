@@ -1,18 +1,28 @@
+"""
+Model training. Using hydra for configuration and TensorBoard for visualization.
+"""
+
+from pathlib import Path
+
+import hydra
 import torch
 import torch.optim as optim
-from pathlib import Path
+from omegaconf import DictConfig
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
-import hydra
-from omegaconf import DictConfig
 
 from dataset import SuctionGraspingDataset, data_transform, target_transform
-from model import RGBDResNet101
 from metrics import masked_bce_loss
+from model import RGBDResNet101
 
 
 @hydra.main(version_base=None, config_path="conf", config_name="config")
 def train(cfg: DictConfig):
+    """Train model using config parameters. Entrypoint for CLI.
+
+    Args:
+        cfg (DictConfig): project's config.
+    """
     device = torch.device(cfg.device if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
