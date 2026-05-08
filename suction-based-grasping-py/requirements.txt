@@ -2,6 +2,7 @@ hydra-core
 numpy
 matplotlib
 omegaconf
+open3d
 pandas
 pillow
 scipy
