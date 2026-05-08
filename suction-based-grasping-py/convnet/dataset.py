@@ -27,8 +27,10 @@ class DatasetInfo:
 
 class SuctionGraspingDataset(Dataset):
     """
-    Dataset for suction grasping that loads color, depth, and label images.
-    Preprocessing mirrors the original Torch/Lua implementation.
+    Dataset for suction grasping. Consists of triples (color image, depth map, label).
+    Label is a grayscale image with values {0, 0.5, 1}, where 0 indicates positions
+    not suitable for grasping, 0.5 - good positions for grasping, and 1 means that the
+    quality of a grasp at this position is unknown and should not be used for training.
     """
 
     def __init__(
@@ -98,9 +100,10 @@ class SuctionGraspingDataset(Dataset):
 def data_transform(
     color_pil: Image, depth_pil: Image, label_pil: Image
 ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-    """Transform images into PyTorch tensor of required format. `depth_pil` is cloned
-    across 3 channels, label_pil is resized to match the shape of the network's output.
-    See the exact algorithm in code.
+    """Data preprocessing, mirrors the original Torch/Lua implementation.
+    Transforms images into PyTorch tensors of required format. `depth_pil` is cloned
+    across 3 channels, label_pil is resized to match the shape of the network's output
+    and its values are mapped to integers {0, 1, 2}. See the exact algorithm in code.
 
     Args:
         color_pil (Image): color image.
@@ -109,6 +112,8 @@ def data_transform(
 
     Returns:
         tuple[torch.Tensor, torch.Tensor, torch.Tensor]: the transformed images.
+            Note that the first two tensors are float-valued 3-dimensional tensors,
+            while the last one is an integer-valued 2-dimensional tensor.
     """
     color_tensor = F.to_tensor(color_pil)  # shape (3, H, W), values [0, 1]
     color_tensor = F.normalize(color_tensor, mean=DatasetInfo.mean, std=DatasetInfo.std)
