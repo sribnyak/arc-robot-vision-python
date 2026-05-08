@@ -38,6 +38,7 @@ class SuctionGraspingDataset(Dataset):
         data_path: str,
         sample_list: str,
         transform: Callable | None = None,
+        target_transform: Callable | None = None,
     ):
         """Initialize the dataset class. Optionally set a transform to be applied to
         each data item.
@@ -46,13 +47,16 @@ class SuctionGraspingDataset(Dataset):
             data_path (str): path to the dataset.
             sample_list (str): path to the text file with the list of samples included
                 in this train/test set.
-            transform (Callable): the transform to be applied to each data item.
+            transform (Callable): the transform to be applied to color and depth input.
+                By default - no transform.
+            target_transform (Callable): the transform to be applied to the label image.
                 By default - no transform.
         """
         super().__init__()
 
         self.data_path = data_path
         self.transform = transform
+        self.target_transform = target_transform
 
         # Read sample file names (one per line, no extension)
         with open(sample_list, "r") as f:
@@ -70,50 +74,48 @@ class SuctionGraspingDataset(Dataset):
 
     def __getitem__(self, index: int) -> Any:
         """Get one data item (color_image, depth_image, label_image) by index, according
-        to the sample list, where each images is in PIL format. Apply transform,
+        to the sample list, where each images is in PIL format. Apply transforms,
         if defined.
 
         Args:
             index (int): index of data item in the dataset.
 
         Returns:
-            Any: the result of self.transform(color_image, depth_image, label_image).
-                If no transform given, returns a tuple of 3 PIL images: one RGB and two
-                single-channel images.
+            Any: returns a tuple of 3 PIL images: one RGB and two single-channel images,
+                 with transforms applied, if defined.
         """
         sample_name = self.sample_paths[index]
 
         color_path = os.path.join(self.data_path, "color-input", f"{sample_name}.png")
-        color_pil = Image.open(color_path).convert("RGB")
+        color = Image.open(color_path).convert("RGB")
 
         depth_path = os.path.join(self.data_path, "depth-input", f"{sample_name}.png")
-        depth_pil = Image.open(depth_path)  # 16-bit single channel
+        depth = Image.open(depth_path)  # 16-bit single channel
 
         label_path = os.path.join(self.data_path, "label", f"{sample_name}.png")
-        label_pil = Image.open(label_path)  # grayscale
+        label = Image.open(label_path)  # grayscale
 
         if self.transform:
-            return self.transform(color_pil, depth_pil, label_pil)
-        return color_pil, depth_pil, label_pil
+            color, depth = self.transform(color, depth)
+        if self.target_transform:
+            label = self.target_transform(label)
+        return color, depth, label
 
 
 def data_transform(
-    color_pil: Image, depth_pil: Image, label_pil: Image
-) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    color_pil: Image, depth_pil: Image
+) -> tuple[torch.Tensor, torch.Tensor]:
     """Data preprocessing, mirrors the original Torch/Lua implementation.
-    Transforms images into PyTorch tensors of required format. `depth_pil` is cloned
-    across 3 channels, label_pil is resized to match the shape of the network's output
-    and its values are mapped to integers {0, 1, 2}. See the exact algorithm in code.
+    Transforms images into PyTorch tensors of required format. Values are normalized,
+    `depth_pil` is cloned across 3 channels. See the exact algorithm in code.
 
     Args:
         color_pil (Image): color image.
         depth_pil (Image): depth image (1 channel).
-        label_pil (Image): label image (1 channel).
 
     Returns:
-        tuple[torch.Tensor, torch.Tensor, torch.Tensor]: the transformed images.
-            Note that the first two tensors are float-valued 3-dimensional tensors,
-            while the last one is an integer-valued 2-dimensional tensor.
+        tuple[torch.Tensor, torch.Tensor]: the transformed images, two float-valued
+            tensors of shape (3, H, W).
     """
     color_tensor = F.to_tensor(color_pil)  # shape (3, H, W), values [0, 1]
     color_tensor = F.normalize(color_tensor, mean=DatasetInfo.mean, std=DatasetInfo.std)
@@ -130,10 +132,24 @@ def data_transform(
         depth_np[c] = (depth_np[c] - DatasetInfo.mean[c]) / DatasetInfo.std[c]
     depth_tensor = torch.from_numpy(depth_np)
 
+    return color_tensor, depth_tensor
+
+
+def target_transform(label_pil: Image) -> torch.Tensor:
+    """Target preprocessing, mirrors the original Torch/Lua implementation.
+    Transforms the image into a PyTorch tensor, resizes to match the shape of
+    the network's output, the values are mapped to integers {0, 1, 2}. See the exact
+    algorithm in code.
+
+    Args:
+        label_pil (Image): label image (1 channel).
+
+    Returns:
+        torch.Tensor: the transformed target image, a 2-dimensional tensor of integers.
+    """
     label_tensor = F.to_tensor(label_pil)  # shape (1, H, W), values [0, 1]
-    # Map to {0, 1, 2} (2 = unknown)
-    label_tensor = torch.round(label_tensor * 2).long()
-    _, height, width = color_tensor.shape
+
+    _, height, width = label_tensor.shape
     label_resized = F.resize(
         label_tensor,
         [height // DatasetInfo.output_scale, width // DatasetInfo.output_scale],
@@ -141,4 +157,5 @@ def data_transform(
     )
     label_resized = label_resized.squeeze(0)  # (H_out, W_out)
 
-    return color_tensor, depth_tensor, label_resized
+    # Map to {0, 1, 2} (2 = unknown)
+    return torch.round(label_resized * 2).long()

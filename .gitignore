@@ -10,5 +10,6 @@ results.png
 outputs/
 logs/
 snapshots/
+weights/
 
 archive/

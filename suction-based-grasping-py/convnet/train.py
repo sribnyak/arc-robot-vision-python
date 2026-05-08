@@ -1,5 +1,4 @@
 import torch
-import torch.nn as nn
 import torch.optim as optim
 from pathlib import Path
 from torch.utils.data import DataLoader
@@ -7,22 +6,23 @@ from torch.utils.tensorboard import SummaryWriter
 import hydra
 from omegaconf import DictConfig
 
-from dataset import SuctionGraspingDataset, data_transform
+from dataset import SuctionGraspingDataset, data_transform, target_transform
 from model import RGBDResNet101
 from metrics import masked_bce_loss
 
 
-@hydra.main(version_base=None, config_path='conf', config_name='config')
+@hydra.main(version_base=None, config_path="conf", config_name="config")
 def train(cfg: DictConfig):
-    device = torch.device(cfg.device if torch.cuda.is_available() else 'cpu')
-    print(f'Using device: {device}')
+    device = torch.device(cfg.device if torch.cuda.is_available() else "cpu")
+    print(f"Using device: {device}")
 
     torch.manual_seed(cfg.seed)
 
     dataset = SuctionGraspingDataset(
         data_path=cfg.data_path,
         sample_list=cfg.train_split,
-        transform=data_transform
+        transform=data_transform,
+        target_transform=target_transform,
     )
     data_loader = DataLoader(
         dataset,
@@ -32,11 +32,11 @@ def train(cfg: DictConfig):
         pin_memory=cfg.pin_memory,
     )
 
-    model = RGBDResNet101(num_classes=cfg.num_classes,
-                          pretrained=True).to(device)
+    model = RGBDResNet101(num_classes=cfg.num_classes, pretrained=True).to(device)
     criterion = masked_bce_loss
-    optimizer = optim.SGD(model.parameters(), lr=cfg.learning_rate, 
-                          momentum=cfg.momentum)
+    optimizer = optim.SGD(
+        model.parameters(), lr=cfg.learning_rate, momentum=cfg.momentum
+    )
 
     # TensorBoard
     writer = SummaryWriter(log_dir=cfg.log_dir)
@@ -53,30 +53,30 @@ def train(cfg: DictConfig):
             optimizer.step()
 
             loss_val = loss.item()
-            print(f'Iteration {train_iter}: loss={loss_val:.6f}')
+            print(f"Iteration {train_iter}: loss={loss_val:.6f}")
 
-            writer.add_scalar('Loss/train', loss_val, train_iter)
+            writer.add_scalar("Loss/train", loss_val, train_iter)
             if train_iter % cfg.log_interval == 0:
                 writer.flush()
 
             if train_iter % cfg.snapshot_interval == 0:
                 checkpoint = {
-                    'iteration': train_iter,
-                    'model': model.state_dict(),
-                    'optimizer': optimizer.state_dict(),
-                    'loss': loss_val,
+                    "iteration": train_iter,
+                    "model": model.state_dict(),
+                    "optimizer": optimizer.state_dict(),
+                    "loss": loss_val,
                 }
-                path = f'{cfg.snapshots_folder}/snapshot-{train_iter}.pt'
+                path = f"{cfg.snapshots_folder}/snapshot-{train_iter}.pt"
                 torch.save(checkpoint, path)
-                print(f'Checkpoint saved: {path}')
+                print(f"Checkpoint saved: {path}")
 
             if train_iter == cfg.max_iterations:
                 break
             train_iter += 1
 
     writer.close()
-    print('Training completed')
+    print("Training completed")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     train()
