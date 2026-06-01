@@ -69,9 +69,8 @@ def postprocess_affordances(
     valid = fg_mask & (Z > 0)
     if not np.any(valid):
         # nothing in foreground; zero affordances and return empty normals
-        affordance_map = affordance_map.copy()  # TODO is it ok?
-        affordance_map[~fg_mask] = 0
-        return affordance_map, np.zeros((H, W, 3), dtype=np.float32)
+        affordance_out = np.zeros_like(affordance_map)
+        return affordance_out, np.zeros((H, W, 3), dtype=np.float32)
 
     X = (x_grid - c_x) * Z / f_x
     Y = (y_grid - c_y) * Z / f_y
@@ -106,10 +105,13 @@ def postprocess_affordances(
         count[py, px] += 1
     nonzero = count > 0
     surface_normals[nonzero] /= count[nonzero][..., None]
+
     # normalize resulting averaged normals (guard against zeros)
-    norms = np.linalg.norm(surface_normals, axis=2, keepdims=True)
-    nz = norms > 1e-8
-    surface_normals[nz[..., 0]] /= norms[nz]
+    norms = np.linalg.norm(surface_normals, axis=2, keepdims=True)  # (H, W, 1)
+    norms2 = norms[..., 0]  # (H, W)
+    mask = norms2 > 1e-8
+    if np.any(mask):
+        surface_normals[mask] /= norms2[mask][:, None]
 
     # 6. Compute local std per channel via box filter -> then mean across channels
     # uniform_filter works on each channel separately; use size=(window, window, 1)

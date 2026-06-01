@@ -3,7 +3,8 @@ Module for loading and preprocessing the suction grasping dataset.
 """
 
 import os
-from typing import Any, Callable
+from typing import Any, Callable, Optional
+from dataclasses import dataclass
 
 import numpy as np
 import torch
@@ -23,6 +24,74 @@ class DatasetInfo:
 
     # Input image size / label image size
     output_scale = 8
+
+
+def raw_to_meters(depth_pil: Image.Image) -> np.ndarray:
+    """Convert 16-bit depth PNG to metres (divide by 10000)."""
+    return np.array(depth_pil, dtype=np.float32) / 10000.0
+
+
+def read_intrinsics(txt_path: str) -> np.ndarray:
+    """Read 3x3 camera matrix from a plain text file."""
+    with open(txt_path, "r") as f:
+        lines = f.readlines()
+    mat = []
+    for line in lines[:3]:
+        parts = line.strip().split()
+        mat.append([float(x) for x in parts])
+    return np.array(mat, dtype=np.float32)
+
+
+@dataclass
+class EvalSample:
+    """Container for all data needed for inference + post-processing."""
+
+    sample_name: str
+    color: torch.Tensor    # (3, H, W) normalised for the network
+    depth: torch.Tensor    # (3, H, W) normalised
+    color_raw: np.ndarray  # (H, W, 3) float [0,1]
+    depth_raw: np.ndarray  # (H, W) float, metres
+    bg_color_raw: Optional[np.ndarray] = None
+    bg_depth_raw: Optional[np.ndarray] = None
+    intrinsics: Optional[np.ndarray] = None
+
+
+def load_inference_sample(
+    rgb_path,
+    depth_path,
+    bg_rgb_path=None,
+    bg_depth_path=None,
+    intrinsics_path=None,
+    sample_name="demo",
+):
+    """Load a single sample from file paths."""
+    color_pil = Image.open(rgb_path).convert("RGB")
+    depth_pil = Image.open(depth_path)
+
+    color_tensor, depth_tensor = data_transform(color_pil, depth_pil)
+    color_raw = np.array(color_pil, dtype=np.float32) / 255.0
+    depth_raw = raw_to_meters(depth_pil)
+
+    bg_color_raw = None
+    bg_depth_raw = None
+    intrinsics = None
+    if bg_rgb_path and bg_depth_path and intrinsics_path:
+        bg_color_pil = Image.open(bg_rgb_path).convert("RGB")
+        bg_depth_pil = Image.open(bg_depth_path)
+        bg_color_raw = np.array(bg_color_pil, dtype=np.float32) / 255.0
+        bg_depth_raw = raw_to_meters(bg_depth_pil)
+        intrinsics = read_intrinsics(intrinsics_path)
+
+    return EvalSample(
+        sample_name=sample_name,
+        color=color_tensor,
+        depth=depth_tensor,
+        color_raw=color_raw,
+        depth_raw=depth_raw,
+        bg_color_raw=bg_color_raw,
+        bg_depth_raw=bg_depth_raw,
+        intrinsics=intrinsics,
+    )
 
 
 class SuctionGraspingDataset(Dataset):

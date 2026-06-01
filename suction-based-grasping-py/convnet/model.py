@@ -3,6 +3,7 @@ The RGB-D ResNet-101 neural network.
 """
 
 import copy
+from pathlib import Path
 
 import torch
 import torch.nn as nn
@@ -90,3 +91,20 @@ class RGBDResNet101(nn.Module):
         logit_map = self.head(combined_features)
         # (batch, num_classes, h/8, w/8)
         return logit_map
+
+
+def load_model(weights_path: str | Path, device: str | torch.device) -> RGBDResNet101:
+    """Load the RGBDResNet101 model with specified weights. If weights are not found,
+    use ImageNet pretrained backbone.
+    """
+    print(f"Loading model from {weights_path}")
+    try:
+        model = RGBDResNet101(num_classes=1, pretrained=False)
+        checkpoint = torch.load(weights_path, map_location=device, weights_only=True)
+        if "optimizer" in checkpoint and "model" in checkpoint:
+            checkpoint = checkpoint["model"]
+        model.load_state_dict(checkpoint)
+    except FileNotFoundError:
+        print("Weights not found - using ImageNet pretrained backbone.")
+        model = RGBDResNet101(num_classes=1, pretrained=True)
+    return model
